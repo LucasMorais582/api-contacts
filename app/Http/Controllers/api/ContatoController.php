@@ -4,6 +4,8 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
+
 use App\Contato;
 
 class ContatoController extends Controller
@@ -13,56 +15,68 @@ class ContatoController extends Controller
     }
 
     public function list() {
-        $contato = Contato::all();
-        return $contato;
+        $contact = Contato::all();
+        return $contact;
     }
 
     public function view($id) {
-        $contato = Contato::find($id);
-        return $contato;
+
+        $contact = Contato::find($id);
+        if($contact == null) abort(404);
+
+        return $contact;
     }
 
     public function create(Request $request){
         try {
-            $contato = new Contato();
 
-            $contato->name = $request->name;
-            $contato->telefone = $request->telefone;
-            $contato->email = $request->email;
+            $contact = new Contato();
 
-            $contato->save();
+            $contact->name = $request->name;
+            $contact->telefone = $request->telefone;
+            $contact->email = $request->email;
 
-            return ['contato' => $contato];
+            $contact->save();
+
+            return response()->json(['contact' => $contact], 201);
 
         } catch(\Exception $error) {
-            return ['response' => 'Error', 'details' => $error];
+            return Response::json([
+                'Response' => $error
+            ], 400);
         }
     }
 
     public function update(Request $request, $id){
         try {
-            $contato = Contato::find($id);
+            $contact = Contato::find($id);
 
-            $contato->name = $request->name;
-            $contato->telefone = $request->telefone;
-            $contato->email = $request->email;
+            if($contact == null) abort(404);
 
-            $contato->save();
+            $contact->name = $request->name;
+            $contact->telefone = $request->telefone;
+            $contact->email = $request->email;
 
-            return ['contato atualizado' => $contato];
+            $contact->save();
+
+            return ['contact' => $contact];
 
         } catch(\Exception $error) {
-            return ['response' => 'Error', 'details' => $error];
+            return Response::json([
+                'Response' => $error
+            ], 400);
         }
     }
 
     public function delete($id){
         try {
-            $contato = Contato::find($id);
+            $contact = Contato::find($id);
 
-            $contato->delete();
+            if($contact == null) abort(404);
 
-            return ['contato deletado'];
+            $contact->delete();
+
+            return ['contact deleted with success'];
 
         } catch(\Exception $error) {
             return ['response' => 'Error', 'details' => $error];
