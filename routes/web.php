@@ -16,3 +16,13 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/status', 'api\ContatoController@status');
+
+Route::namespace('api')->group(function () {
+    Route::get('/contatos', 'ContatoController@list');
+    Route::get('/contatos/{id}', 'ContatoController@view');
+    Route::post('/contatos', 'ContatoController@create');
+    Route::put('/contatos/{id}', 'ContatoController@update');
+    Route::delete('/contatos/{id}', 'ContatoController@delete');
+});
