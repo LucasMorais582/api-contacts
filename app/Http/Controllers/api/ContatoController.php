@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers\api;
 
+use App\Contato;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
-
-use App\Contato;
 
 class ContatoController extends Controller
 {
@@ -19,24 +18,19 @@ class ContatoController extends Controller
         return $contact;
     }
 
-    public function view($id) {
-
-        $contact = Contato::find($id);
-        if($contact == null) abort(404);
-
+    public function show($id) {
+        $contact = Contato::findOrFail($id);
         return $contact;
     }
 
-    public function create(Request $request){
+    public function store(Request $request){
         try {
 
-            $contact = new Contato();
-
-            $contact->name = $request->name;
-            $contact->telefone = $request->telefone;
-            $contact->email = $request->email;
-
-            $contact->save();
+            $contact = Contato::create([
+                'name' => $request->name,
+                'telefone' => $request->telefone,
+                'email' => $request->email,
+            ]);
 
             return response()->json(['contact' => $contact], 201);
 
@@ -49,15 +43,13 @@ class ContatoController extends Controller
 
     public function update(Request $request, $id){
         try {
-            $contact = Contato::find($id);
+            $contact = Contato::findOrFail($id);
 
-            if($contact == null) abort(404);
-
-            $contact->name = $request->name;
-            $contact->telefone = $request->telefone;
-            $contact->email = $request->email;
-
-            $contact->save();
+            $contact = Contato::update([
+                'name' => $request->name,
+                'telefone' => $request->telefone,
+                'email' => $request->email,
+            ]);
 
             return ['contact' => $contact];
 
@@ -70,10 +62,7 @@ class ContatoController extends Controller
 
     public function delete($id){
         try {
-            $contact = Contato::find($id);
-
-            if($contact == null) abort(404);
-
+            $contact = Contato::findOrFail($id);
             $contact->delete();
 
             return ['contact deleted with success'];

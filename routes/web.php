@@ -21,8 +21,8 @@ Route::get('/status', 'api\ContatoController@status');
 
 Route::namespace('api')->group(function () {
     Route::get('/contatos', 'ContatoController@list');
-    Route::get('/contatos/{id}', 'ContatoController@view');
-    Route::post('/contatos', 'ContatoController@create');
+    Route::get('/contatos/{id}', 'ContatoController@show');
+    Route::post('/contatos', 'ContatoController@store');
     Route::put('/contatos/{id}', 'ContatoController@update');
     Route::delete('/contatos/{id}', 'ContatoController@delete');
 });
