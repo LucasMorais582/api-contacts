@@ -43,15 +43,12 @@ class ContatoController extends Controller
 
     public function update(Request $request, $id){
         try {
-            $contact = Contato::findOrFail($id);
 
-            $contact = Contato::update([
-                'name' => $request->name,
-                'telefone' => $request->telefone,
-                'email' => $request->email,
-            ]);
+            $contact = Contato::where('id', $id)->update($request->all());
 
-            return ['contact' => $contact];
+            if($contact) return ['contact' => $id];
+
+            return abort(404);
 
         } catch(\Exception $error) {
             return Response::json([
